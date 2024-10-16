@@ -2,6 +2,7 @@ final public class Scalar {
     public var value: Float
     public var label: String?
     
+    var gradient: Float = 0.0
     var children = Set<Scalar>()
     var `operator`: String?
     
@@ -18,17 +19,19 @@ final public class Scalar {
     }
 }
 
-extension Scalar: Equatable {
-    public static func == (lhs: Scalar, rhs: Scalar) -> Bool {
-        return lhs.value == rhs.value && lhs.children == rhs.children && lhs.label == rhs.label
-    }
-    
+extension Scalar {
     public static func +(_ lhs: Scalar, _ rhs: Scalar) -> Scalar {
         return Scalar(lhs.value + rhs.value, children: (lhs, rhs), operator: "+")
     }
     
     public static func *(_ lhs: Scalar, _ rhs: Scalar) -> Scalar {
         return Scalar(lhs.value * rhs.value, children: (lhs, rhs), operator: "*")
+    }
+}
+
+extension Scalar: Equatable {
+    public static func == (lhs: Scalar, rhs: Scalar) -> Bool {
+        return lhs.value == rhs.value && lhs.children == rhs.children && lhs.label == rhs.label
     }
 }
 
@@ -51,9 +54,10 @@ extension Scalar: CustomStringConvertible {
 extension Scalar {
     public func displayTree(level: Int = 0, isLast: Bool = true, prefix: String = "") -> String {
         let nodeLabel = label != nil ? "\(label!): " : ""
-        var result = prefix + (level > 0 ? (isLast ? "`-- " : "|-- ") : "") + "\(nodeLabel)\(self.value)"
+        var result = prefix + (level > 0 ? (isLast ? "`-- " : "|-- ") : "") + "\(nodeLabel)\(self.value)" + " [∇\(gradient)]"
+        
         if let op = self.operator {
-            result += " (\(op))"
+            result += "\n" + prefix + (level > 0 ? (isLast ? "    " : "|   ") : "") + "|- " + "(\(op))"
         }
         
         let newPrefix = prefix + (level > 0 ? (isLast ? "    " : "|   ") : "")
@@ -67,4 +71,3 @@ extension Scalar {
         return result
     }
 }
-
