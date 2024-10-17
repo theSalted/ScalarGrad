@@ -5,7 +5,7 @@
 //  Created by Yuhao Chen on 10/15/24.
 //
 
-import TinyGrad
+import ScalarGrad
 
 let a = Scalar(2.0, label: "a")
 let b = Scalar(-3.0, label: "b")

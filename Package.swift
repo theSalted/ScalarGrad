@@ -2,21 +2,21 @@
 import PackageDescription
 
 let package = Package(
-    name: "TinyGrad",
+    name: "ScalarGrad",
     products: [
         .library(
-            name: "TinyGrad",
-            targets: ["TinyGrad"]),
+            name: "ScalarGrad",
+            targets: ["ScalarGrad"]),
         .executable(
-            name: "TinyGradExample",
-            targets: ["TinyGradExample"]),
+            name: "ScalarGradExample",
+            targets: ["ScalarGradExample"]),
     ],
     targets: [
         .target(
-            name: "TinyGrad",
+            name: "ScalarGrad",
             dependencies: []),
         .executableTarget(
-            name: "TinyGradExample",
-            dependencies: ["TinyGrad"]),
+            name: "ScalarGradExample",
+            dependencies: ["ScalarGrad"]),
     ]
 )
