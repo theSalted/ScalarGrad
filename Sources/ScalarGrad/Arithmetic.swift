@@ -1,6 +1,6 @@
 //
 //  Arithmetic.swift
-//  TinyGrad
+//  ScalarGrad
 //
 //  Created by Yuhao Chen on 10/16/24.
 //

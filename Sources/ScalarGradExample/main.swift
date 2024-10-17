@@ -1,6 +1,6 @@
 //
 //  main.swift
-//  TinyGrad
+//  ScalarGrad
 //
 //  Created by Yuhao Chen on 10/15/24.
 //
@@ -70,4 +70,42 @@ print(w.makeAsciiTree())
 print("\n\n")
 
 
+let q: [Scalar] = [2.0, 3.0]
+let neuron = Neuron(inputSize: 2)
+let result = neuron.callAsFunction(q)
+print("Neuron test: ", result)
 
+
+let layer = Layer(inputSize: 2, outputSize: 3)
+let result2 = layer.callAsFunction(q)
+print("Layer test: ", result2)
+
+let x_mlp: [Scalar] = [2.0, 3.0, -1.0]
+let mlp = MLP(inputSize: 3, layerSizes: [4, 4, 1])
+let result3 = mlp.callAsFunction(x_mlp)
+
+print("Simple MLP Graph")
+print("Value: ", result3[0])
+print(result3[0].makeAsciiTree())
+print("\n\n")
+
+let xs: [[Scalar]] = [
+    [2.0, 3.0, -1.0],
+    [3.0, -1.0, 0.5],
+    [0.5, 1.0, 1.0],
+    [1.0, 1.0, -1.0]
+]
+
+let ys: [Scalar] = [1.0, -1.0, -1.0, 1.0]
+let ypred = xs.map{ x in mlp(x)[0] }
+print("y prediction: ", ypred)
+let loss = zip(ys, ypred)
+    .map{ yGroundTruth, yOutput in pow((yOutput - yGroundTruth), 2) }
+    .reduce(Scalar(0.0), +)
+print("loss: ", loss)
+loss.backward()
+print("gradient sample: ", mlp.layers[0].neurons[0].weight[0].gradient ?? 0.0)
+print("Simple MLP Graph Trained")
+print("Value: ", result3[0])
+print(result3[0].makeAsciiTree())
+print("\n\n")

@@ -1,8 +1,8 @@
-final public class Scalar {
+final public class Scalar: ExpressibleByFloatLiteral {
     public var value: Float
     public var label: String?
+    public var gradient: Float? = nil
     
-    var gradient: Float? = nil
     var neighbors = Set<Scalar>()
     var `operator`: String?
     var _backward: (() -> Void) = {}
@@ -10,6 +10,11 @@ final public class Scalar {
     public init(_ value: Float, label: String? = nil) {
         self.value = value
         self.label = label
+    }
+    
+    // Implement ExpressibleByFloatLiteral
+    public required init(floatLiteral value: Float) {
+        self.value = value
     }
     
     // Keep this initializer internal
