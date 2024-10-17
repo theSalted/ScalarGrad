@@ -83,10 +83,19 @@ extension Scalar {
 
 // MARK: Free Functions
 public func tanh(_ x: Scalar) -> Scalar {
-    let t = (exp(2 * x.value) - 1) / (exp(2 * x.value) + 1)
+    let t = tanh(x.value)
     let out = Scalar(t, elements: (x, nil), operator: "tanh")
     out._backward = {
-        x.gradient = (1 - pow(t, 2)) * (out.gradient ?? 0.0) + (x.gradient ?? 0.0)
+        let grad = (1 - t * t) * (out.gradient ?? 0.0)
+        x.gradient = grad + (x.gradient ?? 0.0)
+    }
+    return out
+}
+
+public func exp(_ x: Scalar) -> Scalar {
+    let out = Scalar(exp(x.value), elements: (x, nil), operator: "exp")
+    out._backward = {
+        x.gradient = out.value * (out.gradient ?? 0.0) + (x.gradient ?? 0.0)
     }
     return out
 }
@@ -102,13 +111,6 @@ public func pow(_ lhs: Scalar, _ rhs: Scalar) -> Scalar {
     return out
 }
 
-public func exp(_ x: Scalar) -> Scalar {
-    let out = Scalar(exp(x.value), elements: (x, nil), operator: "exp")
-    out._backward = {
-        x.gradient = out.value * (out.gradient ?? 0.0) + (x.gradient ?? 0.0)
-    }
-    return out
-}
 
 
 // MARK: Free Function Overloads
@@ -119,3 +121,4 @@ public func pow(_ lhs: Scalar, _ rhs: Float) -> Scalar {
 public func pow(_ lhs: Float, _ rhs: Scalar) -> Scalar {
     return pow(Scalar(lhs), rhs)
 }
+

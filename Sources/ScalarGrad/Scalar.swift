@@ -2,7 +2,6 @@ final public class Scalar: ExpressibleByFloatLiteral {
     public var value: Float
     public var label: String?
     public var gradient: Float? = nil
-    
     var neighbors = Set<Scalar>()
     var `operator`: String?
     var _backward: (() -> Void) = {}
