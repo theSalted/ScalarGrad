@@ -13,13 +13,13 @@ final public class Scalar {
     }
     
     // Keep this initializer internal
-    init(_ value: Float, children: (Scalar?, Scalar?), operator: String) {
+    init(_ value: Float, elements: (Scalar?, Scalar?), operator: String) {
         self.value = value
         
-        if let leftChild = children.0 {
+        if let leftChild = elements.0 {
             self.neighbors.insert(leftChild)
         }
-        if let rightChild = children.1 {
+        if let rightChild = elements.1 {
             self.neighbors.insert(rightChild)
         }
         self.operator = `operator`

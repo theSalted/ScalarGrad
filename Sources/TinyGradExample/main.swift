@@ -31,14 +31,16 @@ let x1w1 = x1*w1; x1w1.label = "x1*w1"
 let x2w2 = x2*w2; x2w2.label = "x2*w2"
 let x1w1x2w2 = x1w1 + x2w2; x1w1x2w2.label = "x1*w1+x2*w2"
 let n = x1w1x2w2 + x; n.label = "n"
-let o = tanh(n); o.label = "o"
-
-o.backward()
+let o = exp(2 * n)
+let p = (o - 1) / (o + 1)
+o.label = "o"
+p.label = "p"
+p.backward()
 
 print("Complex Grpah")
-print("Value: ", o)
+print("Value: ", p)
 print("Tree:")
-print(o.makeAsciiTree())
+print(p.makeAsciiTree())
 print("\n\n")
 
 
