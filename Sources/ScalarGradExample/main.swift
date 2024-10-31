@@ -81,6 +81,7 @@ let result2 = layer.callAsFunction(q)
 print("Layer test: ", result2)
 
 let x_mlp: [Scalar] = [2.0, 3.0, -1.0]
+
 let mlp = MLP(inputSize: 3, layerSizes: [4, 4, 1])
 let result3 = mlp.callAsFunction(x_mlp)
 
@@ -97,15 +98,49 @@ let xs: [[Scalar]] = [
 ]
 
 let ys: [Scalar] = [1.0, -1.0, -1.0, 1.0]
-let ypred = xs.map{ x in mlp(x)[0] }
-print("y prediction: ", ypred)
-let loss = zip(ys, ypred)
-    .map{ yGroundTruth, yOutput in pow((yOutput - yGroundTruth), 2) }
-    .reduce(Scalar(0.0), +)
-print("loss: ", loss)
-loss.backward()
-print("gradient sample: ", mlp.layers[0].neurons[0].weight[0].gradient ?? 0.0)
-print("Simple MLP Graph Trained")
-print("Value: ", loss)
-print(loss.makeAsciiTree())
-print("\n\n")
+
+for k in 0..<50 {
+    let ypred = xs.map{ x in mlp(x)[0] }
+    let loss = zip(ys, ypred)
+        .map{ yGroundTruth, yOutput in pow((yOutput - yGroundTruth), 2) }
+        .reduce(Scalar(0.0), +)
+    
+    // Zero grad
+    for parameter in mlp.parameters {
+        parameter.gradient = 0.0
+    }
+    
+    loss.backward()
+    
+    for parameter in mlp.parameters {
+        parameter.value += -0.05 * (parameter.gradient ?? 0.0)
+    }
+    
+    print(k, loss.value, ypred)
+}
+
+
+
+//let ypred = xs.map{ x in mlp(x)[0] }
+//print("y prediction: ", ypred)
+//let loss = zip(ys, ypred)
+//    .map{ yGroundTruth, yOutput in pow((yOutput - yGroundTruth), 2) }
+//    .reduce(Scalar(0.0), +)
+//print("loss: ", loss)
+//loss.backward()
+//print("gradient sample: ", mlp.layers[0].neurons[0].weight[0].gradient ?? 0.0)
+//print("Simple MLP Graph Trained")
+////print(loss.makeAsciiTree())
+//print("parameter count: ", mlp.parameters.count)
+//print("\n\n")
+//
+//for paremeter in mlp.parameters {
+//    paremeter.value += -0.01 * (paremeter.gradient ?? 0.0)
+//}
+//
+//let ypred2 = xs.map{ x in mlp(x)[0] }
+//let loss2 = zip(ys, ypred2)
+//    .map{ yGroundTruth, yOutput in pow((yOutput - yGroundTruth), 2) }
+//    .reduce(Scalar(0.0), +)
+//print("loss: ", loss2)
+////for p in mlp.

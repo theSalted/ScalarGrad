@@ -24,7 +24,7 @@ final public class Scalar: ExpressibleByFloatLiteral {
             self.neighbors.insert(leftChild)
         }
         if let rightChild = elements.1 {
-            self.neighbors.insert(rightChild)
+            self.neighbors.insert(rightChild) // Thread 1: Fatal error: Duplicate elements of type 'Scalar' were found in a Set.
         }
         self.operator = `operator`
     }
@@ -64,17 +64,13 @@ extension Scalar {
 
 extension Scalar: Equatable {
     public static func ==(lhs: Scalar, rhs: Scalar) -> Bool {
-        return lhs.value == rhs.value && lhs.neighbors == rhs.neighbors && lhs.label == rhs.label
+        return lhs === rhs // Use reference equality
     }
 }
 
 extension Scalar: Hashable {
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(value)
-        for child in neighbors {
-            hasher.combine(child)
-        }
-        hasher.combine(label)
+        hasher.combine(ObjectIdentifier(self)) // Use object identity
     }
 }
 

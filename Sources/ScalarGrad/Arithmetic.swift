@@ -100,6 +100,42 @@ public func exp(_ x: Scalar) -> Scalar {
     return out
 }
 
+public func log(_ x: Scalar) -> Scalar {
+    let out = Scalar(log(x.value), elements: (x, nil), operator: "log")
+    out._backward = {
+        x.gradient = (1 / x.value) * (out.gradient ?? 0.0) + (x.gradient ?? 0.0)
+    }
+    
+    return out
+}
+
+public func sin(_ x: Scalar) -> Scalar {
+    let out = Scalar(sin(x.value), elements: (x, nil), operator: "sin")
+    out._backward = {
+        x.gradient = cos(x.value) * (out.gradient ?? 0.0) + (x.gradient ?? 0.0)
+    }
+    
+    return out
+}
+
+public func cos(_ x: Scalar) -> Scalar {
+    let out = Scalar(cos(x.value), elements: (x, nil), operator: "cos")
+    out._backward = {
+        x.gradient = -sin(x.value) * (out.gradient ?? 0.0) + (x.gradient ?? 0.0)
+    }
+    
+    return out
+}
+
+public func sqrt(_ x: Scalar) -> Scalar {
+    let out = Scalar(sqrt(x.value), elements: (x, nil), operator: "sqrt")
+    out._backward = {
+        x.gradient = (1 / (2 * sqrt(x.value))) * (out.gradient ?? 0.0) + (x.gradient ?? 0.0)
+    }
+    
+    return out
+} 
+
 public func pow(_ lhs: Scalar, _ rhs: Scalar) -> Scalar {
     let out = Scalar(pow(lhs.value, rhs.value), elements: (lhs, rhs), operator: "pow")
     

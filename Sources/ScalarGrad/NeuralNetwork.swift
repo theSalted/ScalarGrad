@@ -9,6 +9,10 @@ public struct Neuron {
     public var weight: [Scalar]
     public var bias: Scalar
     
+    public var parameters: [Scalar] {
+        return self.weight + [self.bias]
+    }
+    
     public init(inputSize: Int) {
         self.weight = (0..<inputSize).map { _ in Scalar(Float.random(in: -1.0...1.0)) }
         self.bias = Scalar(Float.random(in: -1.0...1.0))
@@ -25,6 +29,10 @@ public struct Neuron {
 public struct Layer {
     public var neurons: [Neuron]
     
+    public var parameters: [Scalar] {
+        return neurons.flatMap { neuron in neuron.parameters }
+    }
+    
     public init(inputSize: Int, outputSize: Int) {
         self.neurons = (0..<outputSize).map { _ in Neuron(inputSize: inputSize)}
     }
@@ -37,6 +45,10 @@ public struct Layer {
 
 public struct MLP {
     public var layers: [Layer]
+    
+    public var parameters: [Scalar] {
+        return layers.flatMap { layer in layer.parameters }
+    }
     
     public init(inputSize: Int, layerSizes: [Int]) {
         let sizes = [inputSize] + layerSizes
